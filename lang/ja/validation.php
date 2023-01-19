@@ -154,7 +154,14 @@ return [
     */
 
     'attributes' => [
-        'password' => 'ぱすわあど'
+        'password' => 'ぱすわあど',
+        'name' => 'お名前',
+        'title' => 'タイトル',
+        'email' => 'メアド',
+        'gender' => '性別',
+        'age' => '年齢',
+        'contact' => '問い合わせ内容',
+        'caution' => '注意事項'
     ],
 
 ];

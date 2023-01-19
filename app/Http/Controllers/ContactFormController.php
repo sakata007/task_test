@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ContactForm;
+use App\Providers\CheckFormServices;
+use App\Http\Requests\StoreContactRequest;
 
 class ContactFormController extends Controller
 {
@@ -13,7 +16,9 @@ class ContactFormController extends Controller
      */
     public function index()
     {
-        return view('contacts.index');
+        $contacts = ContactForm::select('id', 'name', 'title', 'created_at')
+        ->get();
+        return view('contacts.index', compact('contacts'));
     }
 
     /**
@@ -23,7 +28,7 @@ class ContactFormController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts.create');
     }
 
     /**
@@ -32,9 +37,22 @@ class ContactFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
-        //
+        // dd($request, $request->url);
+        ContactForm::create([
+            'name' => $request->name,
+            'title' => $request->title,
+            'email' => $request->email,
+            'url' => $request->url,
+            'gender' => $request->gender,
+            'age' => $request->age,
+            'contact' => $request->contact,
+        ]);
+
+        return to_route('contacts.index');
+
+
     }
 
     /**
@@ -45,7 +63,15 @@ class ContactFormController extends Controller
      */
     public function show($id)
     {
-        //
+        $contact = ContactForm::find($id);
+
+        $gender = CheckFormServices::checkGender($contact);
+
+        $age = CheckFormServices::checkAge($contact);
+
+
+        return view('contacts.show', compact('contact', 'gender', 'age'));
+
     }
 
     /**
@@ -56,7 +82,9 @@ class ContactFormController extends Controller
      */
     public function edit($id)
     {
-        //
+        $contact = ContactForm::find($id);
+
+        return  view('contacts.edit', compact('contact'));
     }
 
     /**
@@ -68,7 +96,17 @@ class ContactFormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $contact = ContactForm::find($id);
+        $contact->name = $request->name;
+        $contact->title = $request->title;
+        $contact->email = $request->email;
+        $contact->url = $request->url;
+        $contact->gender = $request->gender;
+        $contact->age = $request->age;
+        $contact->contact = $request->contact;
+        $contact->save();
+
+        return to_route('contacts.index');
     }
 
     /**
@@ -79,6 +117,9 @@ class ContactFormController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $contact = ContactForm::find($id);
+        $contact->delete();
+
+        return to_route('contacts.index');
     }
 }

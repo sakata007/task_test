@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 20);
             $table->string('email', 255);
-            $table->longText('rul')->nullable();
+            $table->longText('url')->nullable();
             $table->boolean('gender');
             $table->tinyInteger('age');
             $table->string('contact', 200);
